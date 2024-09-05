@@ -26,4 +26,9 @@ public class BairroController {
         BairroDto createdBairroDto = bairroService.create(bairroDto);
         return new ResponseEntity<>(createdBairroDto, HttpStatus.CREATED);
     }
+    @GetMapping("/bairro")
+    public ResponseEntity<BairroDto> getBairroByName(@RequestParam String name){
+        BairroDto bairroDto = bairroService.getBairroByName(name);
+        return ResponseEntity.ok(bairroDto);
+    }
 }
