@@ -30,6 +30,13 @@ public class ValidationExceptionHandler {
     public ResponseEntity<Map<String, String>> handleBairroAlreadyExistsException(BairroAlreadyExistsException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("message", ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);  // Retornando status 409
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(BairroNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Map<String, String>> handleBairroNotFoundException(BairroNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }
