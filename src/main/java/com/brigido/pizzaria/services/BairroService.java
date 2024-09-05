@@ -1,6 +1,7 @@
 package com.brigido.pizzaria.services;
 
 import com.brigido.pizzaria.dtos.BairroDto;
+import com.brigido.pizzaria.exceptions.BairroNotFoundException;
 import com.brigido.pizzaria.mappers.BairroMapper;
 import com.brigido.pizzaria.models.Bairro;
 import com.brigido.pizzaria.repositories.BairroRepository;
@@ -35,5 +36,9 @@ public class BairroService {
         Bairro bairro = bairroMapper.toEntity(bairroDto);
         Bairro savedBairro = bairroRepository.save(bairro);
         return bairroMapper.toDto(savedBairro);
+    }
+    public BairroDto getBairroByName(String name) {
+        Bairro bairro = bairroValidator.validateAndReturnExistingBairro(name);
+        return bairroMapper.toDto(bairro);
     }
 }
