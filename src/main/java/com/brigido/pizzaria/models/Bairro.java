@@ -10,12 +10,15 @@ public class Bairro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long Id;
+    private long id;
     private String name;
     private double tax;
 
     public Bairro(){}
 
+    public long getId(){
+        return id;
+    }
     public String getName() {
         return name;
     }
