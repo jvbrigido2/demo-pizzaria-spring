@@ -1,5 +1,6 @@
 package com.brigido.pizzaria.controllers;
 
+import com.brigido.pizzaria.dtos.BairroCreateDto;
 import com.brigido.pizzaria.dtos.BairroDto;
 import com.brigido.pizzaria.services.BairroService;
 import jakarta.validation.Valid;
@@ -22,8 +23,8 @@ public class BairroController {
      return bairroService.findAll();
     }
     @PostMapping
-    public ResponseEntity<BairroDto> createBairro(@Valid @RequestBody BairroDto bairroDto){
-        BairroDto createdBairroDto = bairroService.create(bairroDto);
+    public ResponseEntity<BairroDto> createBairro(@Valid @RequestBody BairroCreateDto bairroCreateDto){
+        BairroDto createdBairroDto = bairroService.create(bairroCreateDto);
         return new ResponseEntity<>(createdBairroDto, HttpStatus.CREATED);
     }
     @GetMapping("/bairro")
@@ -31,14 +32,14 @@ public class BairroController {
         BairroDto bairroDto = bairroService.getBairroByName(name);
         return ResponseEntity.ok(bairroDto);
     }
-    @DeleteMapping("/bairro")
-    public ResponseEntity<Void> deleteBairroByName(@RequestParam String name){
-        bairroService.deleteBairroByName(name);
+    @DeleteMapping("/bairro/{id}")
+    public ResponseEntity<Void> deleteBairroById(@PathVariable Long id) {
+        bairroService.deleteBairroById(id);
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("bairro")
-    public ResponseEntity<BairroDto> updateBairro(@RequestParam String name, @Valid @RequestBody BairroDto bairroDto) {
-        BairroDto updatedBairroDto = bairroService.updateBairro(name, bairroDto);
+    @PutMapping("/bairro/{id}")
+    public ResponseEntity<BairroDto> updateBairro(@PathVariable Long id, @Valid @RequestBody BairroDto bairroDto) {
+        BairroDto updatedBairroDto = bairroService.updateBairro(id, bairroDto);
         return ResponseEntity.ok(updatedBairroDto);
     }
 }
