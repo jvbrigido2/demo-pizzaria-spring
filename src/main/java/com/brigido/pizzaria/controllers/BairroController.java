@@ -31,4 +31,14 @@ public class BairroController {
         BairroDto bairroDto = bairroService.getBairroByName(name);
         return ResponseEntity.ok(bairroDto);
     }
+    @DeleteMapping("/bairro")
+    public ResponseEntity<Void> deleteBairroByName(@RequestParam String name){
+        bairroService.deleteBairroByName(name);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("bairro")
+    public ResponseEntity<BairroDto> updateBairro(@RequestParam String name, @Valid @RequestBody BairroDto bairroDto) {
+        BairroDto updatedBairroDto = bairroService.updateBairro(name, bairroDto);
+        return ResponseEntity.ok(updatedBairroDto);
+    }
 }
