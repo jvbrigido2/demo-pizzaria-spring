@@ -1,5 +1,6 @@
 package com.brigido.pizzaria.services;
 
+import com.brigido.pizzaria.dtos.BairroCreateDto;
 import com.brigido.pizzaria.dtos.BairroDto;
 import com.brigido.pizzaria.mappers.BairroMapper;
 import com.brigido.pizzaria.models.Bairro;
@@ -28,11 +29,12 @@ public class BairroService {
                 .map(bairroMapper::toDto)
                 .collect(Collectors.toList());
     }
-    @Transactional
-    public BairroDto create(BairroDto bairroDto){
-        bairroValidator.validateUniqueName(bairroDto.name());
 
-        Bairro bairro = bairroMapper.toEntity(bairroDto);
+    @Transactional
+    public BairroDto create(BairroCreateDto bairroCreateDto){
+        bairroValidator.validateUniqueName(bairroCreateDto.name());
+
+        Bairro bairro = bairroMapper.toEntity(bairroCreateDto);
         Bairro savedBairro = bairroRepository.save(bairro);
         return bairroMapper.toDto(savedBairro);
     }
@@ -40,21 +42,23 @@ public class BairroService {
         Bairro bairro = bairroValidator.validateAndReturnExistingBairro(name);
         return bairroMapper.toDto(bairro);
     }
-    @Transactional
-    public void deleteBairroByName(String name){
-        Bairro bairro = bairroValidator.validateAndReturnExistingBairro(name);
 
-        bairroRepository.delete(bairro);
-    }
     @Transactional
-    public BairroDto updateBairro(String name, BairroDto bairroDto) {
-        Bairro bairro = bairroValidator.validateAndReturnExistingBairro(name);
+    public BairroDto updateBairro(Long id, BairroDto bairroDto) {
+        Bairro bairro = bairroRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
 
         bairro.setName(bairroDto.name());
         bairro.setTax(bairroDto.tax());
 
         Bairro updatedBairro = bairroRepository.save(bairro);
-
         return bairroMapper.toDto(updatedBairro);
+    }
+
+    @Transactional
+    public void deleteBairroById(Long id) {
+        Bairro bairro = bairroRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
+        bairroRepository.delete(bairro);
     }
 }
