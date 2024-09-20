@@ -5,3 +5,8 @@ spring:
     mongodb:
       uri: 'mongodb+srv://brigido:brigidopassword@clusterpizzaria.9newe.mongodb.net/pizzariadb?retryWrites=true&w=majority&appName=ClusterPizzaria'
       auto-index-creation: true
+springdoc:
+  openapi:
+    title: 'Pizzaria Bairro API'
+    description: 'Component responsible for bairro management'
+    version: '1.0.0'
