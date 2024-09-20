@@ -4,8 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.With;
 
-public record BairroCreateDto(
+@With
+public record CreateBairroRequest(
         @NotBlank(message = "O nome do bairro não pode ser vazio")
         @Size(min = 3 , max = 100, message = "O nome tem que possuir entre 5 a 100 caracteres")
         String name,
