@@ -1,11 +1,9 @@
 package com.brigido.pizzaria.controllers;
 
-import com.brigido.pizzaria.dtos.BairroCreateDto;
-import com.brigido.pizzaria.dtos.BairroDto;
-import com.brigido.pizzaria.services.BairroService;
+import com.brigido.pizzaria.dtos.BairroResponse;
+import com.brigido.pizzaria.dtos.CreateBairroRequest;
+import com.brigido.pizzaria.dtos.UpdateBairroRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,17 +13,20 @@ import java.util.List;
 public interface BairroController {
 
     @GetMapping
-    public List<BairroDto> findALl();
+    public ResponseEntity<List<BairroResponse>> findALl();
 
     @PostMapping
-    public ResponseEntity<Void> createBairro(@Valid @RequestBody BairroCreateDto bairroCreateDto);
+    public ResponseEntity<Void> createBairro(@Valid @RequestBody final CreateBairroRequest request);
 
     @GetMapping("/bairro")
-    public ResponseEntity<BairroDto> getBairroByName(@RequestParam String name);
+    public ResponseEntity<BairroResponse> getBairroByName(@RequestParam final String name);
 
-    @DeleteMapping("/bairro/{id}")
-    public ResponseEntity<Void> deleteBairroById(@PathVariable String id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBairroById(@PathVariable(name = "id") final String id);
 
-    @PutMapping("/bairro/{id}")
-    public ResponseEntity<BairroDto> updateBairro(@PathVariable String id, @Valid @RequestBody BairroDto bairroDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<BairroResponse> updateBairro(
+            @PathVariable(name="id") final String id,
+            @Valid @RequestBody final UpdateBairroRequest request
+    );
 }
