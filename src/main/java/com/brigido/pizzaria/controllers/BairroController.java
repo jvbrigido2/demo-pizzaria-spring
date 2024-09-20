@@ -11,35 +11,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
 @RequestMapping("api/bairros")
-public class BairroController {
-
-    @Autowired
-    private BairroService bairroService;
+public interface BairroController {
 
     @GetMapping
-    public List<BairroDto> findALl(){
-     return bairroService.findAll();
-    }
+    public List<BairroDto> findALl();
+
     @PostMapping
-    public ResponseEntity<BairroDto> createBairro(@Valid @RequestBody BairroCreateDto bairroCreateDto){
-        BairroDto createdBairroDto = bairroService.create(bairroCreateDto);
-        return new ResponseEntity<>(createdBairroDto, HttpStatus.CREATED);
-    }
+    public ResponseEntity<Void> createBairro(@Valid @RequestBody BairroCreateDto bairroCreateDto);
+
     @GetMapping("/bairro")
-    public ResponseEntity<BairroDto> getBairroByName(@RequestParam String name){
-        BairroDto bairroDto = bairroService.getBairroByName(name);
-        return ResponseEntity.ok(bairroDto);
-    }
+    public ResponseEntity<BairroDto> getBairroByName(@RequestParam String name);
+
     @DeleteMapping("/bairro/{id}")
-    public ResponseEntity<Void> deleteBairroById(@PathVariable Long id) {
-        bairroService.deleteBairroById(id);
-        return ResponseEntity.noContent().build();
-    }
+    public ResponseEntity<Void> deleteBairroById(@PathVariable String id);
+
     @PutMapping("/bairro/{id}")
-    public ResponseEntity<BairroDto> updateBairro(@PathVariable Long id, @Valid @RequestBody BairroDto bairroDto) {
-        BairroDto updatedBairroDto = bairroService.updateBairro(id, bairroDto);
-        return ResponseEntity.ok(updatedBairroDto);
-    }
+    public ResponseEntity<BairroDto> updateBairro(@PathVariable String id, @Valid @RequestBody BairroDto bairroDto);
 }

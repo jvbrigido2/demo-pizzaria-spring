@@ -3,62 +3,39 @@ package com.brigido.pizzaria.services;
 import com.brigido.pizzaria.dtos.BairroCreateDto;
 import com.brigido.pizzaria.dtos.BairroDto;
 import com.brigido.pizzaria.mappers.BairroMapper;
-import com.brigido.pizzaria.models.Bairro;
 import com.brigido.pizzaria.repositories.BairroRepository;
-import com.brigido.pizzaria.validators.BairroValidator;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BairroService {
 
-    @Autowired
-    private BairroRepository bairroRepository;
-    @Autowired
-    private BairroMapper bairroMapper;
-    @Autowired
-    private BairroValidator bairroValidator;
+    private final BairroRepository repository;
 
-    public List<BairroDto> findAll(){
-        return bairroRepository.findAll()
+    private final BairroMapper mapper;
+
+    public List<BairroDto> findAll() {
+        return repository.findAll()
                 .stream()
-                .map(bairroMapper::toDto)
-                .collect(Collectors.toList());
+                .map(mapper::toDto)
+                .toList();
     }
 
-    @Transactional
-    public BairroDto create(BairroCreateDto bairroCreateDto){
-        bairroValidator.validateUniqueName(bairroCreateDto.name());
-
-        Bairro bairro = bairroMapper.toEntity(bairroCreateDto);
-        Bairro savedBairro = bairroRepository.save(bairro);
-        return bairroMapper.toDto(savedBairro);
-    }
-    public BairroDto getBairroByName(String name) {
-        Bairro bairro = bairroValidator.validateAndReturnExistingBairro(name);
-        return bairroMapper.toDto(bairro);
+    public void create(BairroCreateDto request) {
+        verifyIfNameAlreadyExists(request.name(), null);
+        repository.save(mapper.toEntity(request));
     }
 
-    @Transactional
-    public BairroDto updateBairro(Long id, BairroDto bairroDto) {
-        Bairro bairro = bairroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
+    private void verifyIfNameAlreadyExists(final String name, final String id){
+        repository.findByName(name)
+                .filter(user -> !user.getId().equals(id))
+                .ifPresent(user ->{
+                    throw new DataIntegrityViolationException("Name [" + name + "] já existe");
+                });
 
-        bairro.setName(bairroDto.name());
-        bairro.setTax(bairroDto.tax());
-
-        Bairro updatedBairro = bairroRepository.save(bairro);
-        return bairroMapper.toDto(updatedBairro);
-    }
-
-    @Transactional
-    public void deleteBairroById(Long id) {
-        Bairro bairro = bairroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
-        bairroRepository.delete(bairro);
     }
 }
